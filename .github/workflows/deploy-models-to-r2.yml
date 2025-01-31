@@ -29,7 +29,7 @@ jobs:
 
       - name: Sync folder to R2
         env:
-          R2_ENDPOINT: "https://10b40fbca04e71248a28937609c09a4f.r2.cloudflarestorage.com
+          R2_ENDPOINT: "https://10b40fbca04e71248a28937609c09a4f.r2.cloudflarestorage.com"
 "
           BUCKET_NAME: "radiantrays"
         run: |
