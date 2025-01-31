@@ -1,0 +1,36 @@
+name: Deploy to Cloudflare R2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configure AWS CLI for Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_KEY }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region auto
+
+      - name: Sync folder to R2
+        env:
+          R2_ENDPOINT: "https://10b40fbca04e71248a28937609c09a4f.r2.cloudflarestorage.com
+"
+          BUCKET_NAME: "radiantrays"
+        run: |
+          aws --endpoint-url $R2_ENDPOINT s3 sync ./assets s3://$BUCKET_NAME --acl public-read
