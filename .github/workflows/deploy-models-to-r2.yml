@@ -40,14 +40,14 @@ jobs:
           aws configure set default.s3.disable_checksum true  # Critical for R2
 
 
-      - name: Sync folder to R2
+      - name: Sync to R2
         env:
           R2_ENDPOINT: "https://10b40fbca04e71248a28937609c09a4f.r2.cloudflarestorage.com"
-          BUCKET_NAME: "radiantrays"
+          BUCKET_NAME: radiantrays
+          AWS_MAX_ATTEMPTS: 5                # Retry up to 5 times
+          AWS_S3_MULTIPART_CHUNK_SIZE: 64MB  # 64MB chunk size for multipart uploads
         run: |
-          aws --endpoint-url $R2_ENDPOINT s3 sync ./assets s3://$BUCKET_NAME --acl public-read \
-          --delete \
-          --cli-connect-timeout 6000 \
-          --cli-read-timeout 6000 \
-          --retries 5 \
-          --cli-multipart-chunk-size 64MB
+          aws --endpoint-url "$R2_ENDPOINT" s3 sync ./assets s3://$BUCKET_NAME \
+            --delete \
+            --cli-connect-timeout 6000 \
+            --cli-read-timeout 6000
