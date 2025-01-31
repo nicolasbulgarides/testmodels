@@ -20,7 +20,7 @@ jobs:
         run: |
           if command -v aws &> /dev/null; then
             echo "AWS CLI already installed. Updating..."
-            sudo /usr/local/aws-cli/v2/current/bin/awscli-exe update
+            sudo /usr/local/bin/aws/install --update
           else
             echo "AWS CLI not found. Installing..."
             sudo apt-get update
